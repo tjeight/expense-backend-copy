@@ -54,3 +54,6 @@ def remove_expense(expense_id: int, db: Session = Depends(get_db)):
         raise HTTPException(status_code=404, detail="Not found")
     return {}
 
+@app.get("/")
+def get_home():
+    return {name:"Tejas"}
