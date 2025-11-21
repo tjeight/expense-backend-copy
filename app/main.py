@@ -45,22 +45,22 @@ def get_db():
         db.close()
 
 
-@app.get("/api/health")
+@app.get("/health")
 def health():
     return {"status": "ok"}
 
 
-@app.get("/api/expenses", response_model=List[schemas.ExpenseOut])
+@app.get("/expenses", response_model=List[schemas.ExpenseOut])
 def read_expenses(db: Session = Depends(get_db)):
     return crud.list_expenses(db)
 
 
-@app.post("/api/expenses", response_model=schemas.ExpenseOut, status_code=201)
+@app.post("/expenses", response_model=schemas.ExpenseOut, status_code=201)
 def add_expense(payload: schemas.ExpenseCreate, db: Session = Depends(get_db)):
     return crud.create_expense(db, payload)
 
 
-@app.get("/api/expenses/{expense_id}", response_model=schemas.ExpenseOut)
+@app.get("/expenses/{expense_id}", response_model=schemas.ExpenseOut)
 def read_one(expense_id: int, db: Session = Depends(get_db)):
     item = crud.get_expense(db, expense_id)
     if not item:
@@ -68,7 +68,7 @@ def read_one(expense_id: int, db: Session = Depends(get_db)):
     return item
 
 
-@app.delete("/api/expenses/{expense_id}", status_code=204)
+@app.delete("/expenses/{expense_id}", status_code=204)
 def remove_expense(expense_id: int, db: Session = Depends(get_db)):
     ok = crud.delete_expense(db, expense_id)
     if not ok:
