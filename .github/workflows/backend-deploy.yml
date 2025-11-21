@@ -1,11 +1,11 @@
-name: Backend CI & Deploy to Render
+name: Backend CI & Deploy
 
 on:
   push:
     branches: [ "main" ]
 
 jobs:
-  test-and-deploy:
+  build-and-deploy:
     runs-on: ubuntu-latest
 
     steps:
@@ -18,17 +18,16 @@ jobs:
           python-version: "3.10"
 
       - name: Install dependencies
-        working-directory: ./backend
+        working-directory: backend
         run: |
           pip install --upgrade pip
           pip install -r requirements.txt
 
-      - name: Sanity check import
-        working-directory: ./backend
-        run: python -c "import importlib; importlib.import_module('app.main'); print('import ok')"
+      - name: Sanity import
+        working-directory: backend
+        run: |
+          python -c "import app.main; print('import ok')"
 
-      - name: Deploy to Render
-        uses: render-oss/render-deploy-action@v1
-        with:
-          serviceId: ${{ secrets.RENDER_SERVICE_ID }}
-          apiKey: ${{ secrets.RENDER_API_KEY }}
+      - name: Trigger Render Deploy
+        run: |
+          curl -X POST "${{ secrets.RENDER_DEPLOY_HOOK }}"
