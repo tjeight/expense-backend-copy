@@ -26,15 +26,15 @@ jobs:
       - name: Sanity import
         working-directory: ./backend
         run: |
-          python - <<'PY'
+          python - << 'EOF'
 import importlib, sys
 try:
     importlib.import_module('app.main')
     print("import ok")
 except Exception as e:
-    print("import fail", e)
+    print("import fail:", e)
     sys.exit(1)
-PY
+EOF
 
       - name: Deploy to Render
         uses: jakejarvis/render-deploy-action@v1
